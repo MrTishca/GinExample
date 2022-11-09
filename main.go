@@ -7,13 +7,12 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-var db = make(map[string]string)
-
 func setupRouter() *gin.Engine {
 	// Disable Console Color
 	// gin.DisableConsoleColor()
 	r := gin.Default()
-	r.POST("/auth/signin/", auth.Sigin)
+	r.POST("/auth/signUp/", auth.SigUp)
+	r.POST("/auth/signIn/", auth.SigIn)
 	// /login/
 
 	return r

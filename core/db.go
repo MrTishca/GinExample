@@ -4,11 +4,19 @@ import (
 	"log"
 
 	"gorm.io/driver/postgres"
+	"github.com/spf13/viper"
 	"gorm.io/gorm"
 )
 
 func GetDatabase() *gorm.DB {
-	dsn := "host=localhost user=dful password=Tacos123.# dbname=horus port=5432 sslmode=disable"
+	
+	host := viperEnvVariable("Host")
+	user := viperEnvVariable("User")
+	password := viperEnvVariable("Password")
+	dbname := viperEnvVariable("DBname")
+	port := viperEnvVariable("Port")
+
+	dsn := "host=" + host + " user=" + user + " password=" + password + " dbname=" + dbname + " port=" + port + " sslmode=disable"
 	conn, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatalln("Wrong database Conection")
@@ -23,6 +31,21 @@ func GetDatabase() *gorm.DB {
 
 	return conn
 }
+
+func viperEnvVariable(key string)string{
+	viper.SetConfigFile(".env")
+	err := viper.ReadInConfig()
+	if err != nil{
+		log.Fatalf("Errorr",err)
+	}
+	value, ok := viper.Get(key).(string)
+	if !ok {
+		log.Fatalf("Not Found Value")
+	}
+	return value
+}
+
+
 
 func InitDB() {
 	conn := GetDatabase()
